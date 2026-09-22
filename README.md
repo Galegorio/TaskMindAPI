@@ -1,61 +1,112 @@
-TaskMind API
+# TaskMind API
 
-API inteligente para gerenciamento de tarefas, eventos e operações através de linguagem natural.
+> Intelligent API for task, event and operational management through natural language.
 
-Sobre o projeto
+[![Java](https://img.shields.io/badge/Java-21+-ED8B00?style=flat\&logo=openjdk\&logoColor=white)](https://www.java.com/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-6DB33F?style=flat\&logo=springboot\&logoColor=white)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17+-4169E1?style=flat\&logo=postgresql\&logoColor=white)](https://www.postgresql.org/)
+[![Maven](https://img.shields.io/badge/Maven-3.x-C71A36?style=flat\&logo=apachemaven\&logoColor=white)](https://maven.apache.org/)
+[![Status](https://img.shields.io/badge/status-in%20development-yellow?style=flat)]()
 
-O TaskMind é um projeto de API desenvolvido com o objetivo de criar uma plataforma de gerenciamento inteligente capaz de interpretar comandos em linguagem natural e transformá-los em ações estruturadas.
+---
 
-A ideia é permitir que o usuário interaja com o sistema de maneira mais natural, sem precisar realizar manualmente todas as etapas de criação, organização e atualização de tarefas e compromissos.
+## Overview
 
-Por exemplo:
+**TaskMind** is an API-first platform designed to transform natural-language instructions into structured actions for managing tasks, events and operational activities.
 
-"Amanhã às 9h chega o caminhão da empresa X com a mercadoria do pedido 39482."
+Instead of requiring users to manually navigate through multiple screens and forms, TaskMind aims to allow interactions such as:
 
-O sistema deverá ser capaz de interpretar as informações relevantes dessa frase e transformá-las em uma operação estruturada dentro da plataforma.
+> "Amanhã às 9h chega o caminhão da empresa X com 300 caixas. O descarregamento deve levar aproximadamente 40 minutos."
 
-Objetivo
+The system will interpret the request, extract the relevant information, validate the data and create the corresponding operation.
 
-O objetivo principal do TaskMind é unir:
+The project is being designed as an independent API, allowing different applications and interfaces to consume its services.
 
-API REST
-Inteligência artificial
-Gerenciamento de tarefas
-Eventos e compromissos
-Operações logísticas
-Integrações com serviços externos
-Interação através de linguagem natural
+---
 
-A API será desenvolvida de forma independente de uma aplicação específica, permitindo que diferentes clientes possam utilizá-la.
+## The Idea
 
-Um aplicativo web será desenvolvido posteriormente como uma das interfaces de demonstração da API.
+TaskMind goes beyond a traditional to-do list.
 
-Conceito
+The platform is being designed to represent different types of activities and operations, including:
 
-O TaskMind não pretende ser apenas uma lista de tarefas.
+* Tasks
+* Meetings
+* Appointments
+* Visits
+* Deliveries
+* Merchandise receiving
+* Pickups
+* Transfers
+* Other operational activities
 
-A proposta é criar uma plataforma capaz de representar diferentes tipos de atividades e operações do cotidiano, como:
+The main goal is to create a common platform where these activities can be managed through both traditional API requests and natural-language interactions.
 
-Tarefas
-Reuniões
-Visitas
-Compromissos
-Entregas
-Recebimento de mercadorias
-Retiradas
-Transferências
-Outras operações
+---
 
-A inteligência artificial será responsável por interpretar comandos em linguagem natural e convertê-los em ações estruturadas.
+## How It Works
 
-Exemplo
+The core concept follows a controlled pipeline:
 
-Entrada:
+```text
+┌─────────────────────┐
+│   Natural Language  │
+│                     │
+│ "Marca uma reunião  │
+│  sexta às 15h."     │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│   AI Interpretation │
+│                     │
+│ Identify intent     │
+│ Extract information │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Structured Action   │
+│                     │
+│ CREATE_EVENT        │
+│ MEETING             │
+│ 15:00               │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│      Validation     │
+│                     │
+│ Business rules      │
+│ Data validation     │
+│ Permissions         │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│      Execution      │
+│                     │
+│ Database / Services │
+└─────────────────────┘
+```
 
+A inteligência artificial não terá acesso direto às operações internas do sistema.
+
+Instead, it will propose a structured action that is validated and executed by the API.
+
+---
+
+## Example
+
+### User input
+
+```text
 Marca uma reunião com João para sexta às 15h.
+```
 
-Interpretação esperada:
+### Possible AI interpretation
 
+```json
 {
   "intent": "CREATE_EVENT",
   "event_type": "MEETING",
@@ -63,164 +114,276 @@ Interpretação esperada:
   "date": "2026-09-25",
   "start_time": "15:00"
 }
+```
 
-A API então será responsável por validar essas informações e executar a operação solicitada.
+The API can then validate the information before creating the event.
 
-Arquitetura planejada
+This architecture allows the AI layer to remain independent from the application's business logic.
 
-A arquitetura inicial seguirá o conceito de API-first:
+---
 
-             ┌──────────────────┐
-             │    Web App       │
-             │    Mobile App    │
-             │  Outros Clientes │
-             └────────┬─────────┘
-                      │
-                      ▼
-             ┌──────────────────┐
-             │   TaskMind API   │
-             │                  │
-             │ Autenticação     │
-             │ Tarefas          │
-             │ Eventos          │
-             │ Operações        │
-             │ Inteligência     │
-             │ Integrações      │
-             └────────┬─────────┘
-                      │
-          ┌───────────┼───────────┐
-          ▼           ▼           ▼
-     PostgreSQL       IA      Integrações
-                              externas
+## Architecture
 
-A aplicação cliente não será responsável pela lógica principal do sistema. Ela consumirá a API através de requisições HTTP.
+The project follows an **API-first architecture**.
 
-Inteligência artificial
+```text
+                       ┌───────────────────┐
+                       │    Web Client     │
+                       └─────────┬─────────┘
+                                 │
+                       ┌─────────▼─────────┐
+                       │    Mobile Client  │
+                       └─────────┬─────────┘
+                                 │
+                                 ▼
+                    ┌────────────────────────┐
+                    │      TaskMind API      │
+                    │                        │
+                    │  Authentication       │
+                    │  Tasks                │
+                    │  Events               │
+                    │  Operations           │
+                    │  AI                   │
+                    │  Notifications        │
+                    │  Integrations         │
+                    └───────────┬────────────┘
+                                │
+              ┌─────────────────┼─────────────────┐
+              │                 │                 │
+              ▼                 ▼                 ▼
+       ┌─────────────┐   ┌─────────────┐   ┌──────────────┐
+       │ PostgreSQL  │   │ AI Provider │   │ Integrations │
+       └─────────────┘   └─────────────┘   └──────────────┘
+```
 
-Um dos principais conceitos do TaskMind será separar a interpretação feita pela inteligência artificial da execução das ações.
+The client applications are consumers of the API rather than the core of the system.
 
-O fluxo planejado é:
+This allows TaskMind to potentially support multiple clients in the future.
 
-Linguagem natural
-       ↓
-Interpretação
-       ↓
-Intenção estruturada
-       ↓
-Validação
-       ↓
-Execução
+---
 
-Dessa forma, a inteligência artificial não terá controle direto sobre o banco de dados ou sobre as regras do sistema.
+## Core Concepts
 
-A API será responsável por validar e executar as ações solicitadas.
+The domain is being designed around three main concepts:
 
-Tecnologias planejadas
-Backend
-Java
-Spring Boot
-Spring Data JPA
-Hibernate
-Maven
-Banco de dados
-PostgreSQL
-API
-REST
-JSON
-OpenAPI / Swagger
-Autenticação
-JWT
-OAuth 2.0
-Inteligência artificial
+### Tasks
 
-A integração com modelos de inteligência artificial será feita através de uma camada de abstração, permitindo que diferentes provedores ou modelos possam ser utilizados no futuro.
+Activities that need to be completed.
 
-Integrações planejadas
-Google Tasks
-Google Calendar
-Outros serviços externos futuramente
-Funcionalidades planejadas
+Examples:
 
-O projeto ainda está em desenvolvimento. Entre as funcionalidades planejadas estão:
+* Send an email
+* Review a document
+* Call a supplier
+* Prepare an order
 
-Autenticação de usuários
+### Events
 
-Gerenciamento de tarefas
+Activities associated with a specific time or period.
 
-Gerenciamento de eventos
+Examples:
 
-Gerenciamento de operações
+* Meetings
+* Appointments
+* Visits
+* Scheduled deliveries
 
-Pessoas e contatos relacionados
+### Operations
 
-Locais
+Activities that involve a real-world operational process.
 
-Integração com Google Tasks
+Examples:
 
-Integração com Google Calendar
+* Receiving merchandise
+* Delivery
+* Pickup
+* Transfer
+* Return
 
-Interpretação de linguagem natural
+These concepts can be related to other entities such as people, locations, companies, vehicles and merchandise.
 
-Criação e alteração de tarefas através de comandos
+---
 
-Detecção de conflitos de agenda
+## Planned AI Capabilities
 
-Sugestão de horários
+The AI layer is planned to support operations such as:
 
-Resumos da agenda
+* Natural-language task creation
+* Event creation and modification
+* Task categorization
+* Priority detection
+* Date and time extraction
+* Schedule organization
+* Conflict detection
+* Schedule suggestions
+* Daily summaries
+* Natural-language queries
+* Conversational interactions
 
-Sistema de notificações
+For potentially destructive or large-scale actions, the system may use a **preview and confirmation flow** before applying changes.
 
-Histórico de ações da IA
+---
 
-Interface web de demonstração
+## Integrations
 
-Entrada por áudio
+The project is designed with external integrations in mind.
 
-Integração com outros serviços
+Planned integrations include:
 
-Exemplo de uso futuro
+* Google Tasks
+* Google Calendar
+* AI/LLM providers
+* Mapping and location services
+* Notification services
 
-O usuário poderá enviar algo como:
+The integration layer will be designed to keep external services decoupled from the core business logic.
 
-Amanhã às 8 chega um caminhão da empresa X
-com 300 caixas. O descarregamento deve levar
-aproximadamente 40 minutos.
+---
 
-O TaskMind deverá ser capaz de identificar informações como:
+## Planned Input Methods
 
-Tipo da operação
-Data
-Horário
-Empresa
-Quantidade
-Tipo de mercadoria
-Duração estimada
+The initial interaction will be text-based.
 
-E transformar essas informações em uma operação estruturada dentro do sistema.
+Future versions may support additional input methods, including:
 
-Status
+```text
+Text
+  │
+  ├──────────────► AI Interpretation
+  │
+Audio
+  │
+  └──► Speech-to-Text ──► AI Interpretation
+```
 
-🚧 Em desenvolvimento
+This allows different input methods to share the same processing pipeline.
 
-O projeto encontra-se em fase inicial de planejamento e desenvolvimento.
+---
 
-As funcionalidades e a arquitetura descritas neste documento poderão ser alteradas conforme o projeto evoluir.
+## Technology Stack
 
-Objetivos do projeto
+### Backend
 
-Além de desenvolver uma aplicação funcional, o TaskMind tem como objetivo servir como projeto de estudo e portfólio, explorando conceitos de:
+* Java
+* Spring Boot
+* Spring Data JPA
+* Hibernate
+* Maven
 
-Desenvolvimento de APIs
-Arquitetura de software
-Desenvolvimento backend
-Bancos de dados
-Autenticação e autorização
-Integração com APIs externas
-Inteligência artificial
-Processamento de linguagem natural
-Sistemas distribuídos e integrações
-Boas práticas de desenvolvimento
-Licença
+### Database
 
-Este projeto está sob a licença MIT.
+* PostgreSQL
+
+### API
+
+* REST
+* JSON
+* OpenAPI / Swagger
+
+### Security
+
+* Spring Security
+* JWT
+* OAuth 2.0
+
+### Artificial Intelligence
+
+An abstraction layer will be used for AI providers, allowing the underlying model or provider to be replaced without coupling the core application to a specific service.
+
+---
+
+## Roadmap
+
+The project is currently in its planning and foundation stage.
+
+### Phase 1 — Foundation
+
+* [ ] Project setup
+* [ ] Spring Boot configuration
+* [ ] Database configuration
+* [ ] Initial domain model
+* [ ] API documentation
+* [ ] Authentication
+
+### Phase 2 — Core API
+
+* [ ] Task management
+* [ ] Event management
+* [ ] Operation management
+* [ ] People and locations
+* [ ] Notifications
+* [ ] Audit history
+
+### Phase 3 — Integrations
+
+* [ ] Google OAuth
+* [ ] Google Tasks integration
+* [ ] Google Calendar integration
+* [ ] External service abstraction
+
+### Phase 4 — AI
+
+* [ ] Natural-language interpretation
+* [ ] Structured AI actions
+* [ ] Validation pipeline
+* [ ] AI-generated tasks and events
+* [ ] Schedule analysis
+* [ ] Conflict detection
+* [ ] Confirmation flow
+
+### Phase 5 — Client Application
+
+* [ ] Web application
+* [ ] Dashboard
+* [ ] Calendar
+* [ ] Task management
+* [ ] AI assistant interface
+
+### Phase 6 — Multimodal Interaction
+
+* [ ] Audio input
+* [ ] Speech-to-text
+* [ ] Document processing
+* [ ] Image-based information extraction
+
+---
+
+## Project Status
+
+🚧 **Under active development**
+
+TaskMind is currently in the planning and architecture stage.
+
+The architecture, features and roadmap may evolve as the project develops.
+
+---
+
+## Project Goals
+
+TaskMind is being developed with two complementary goals:
+
+**1. Build a useful platform**
+
+Create an API capable of handling tasks, events and operational workflows through both traditional APIs and natural-language interactions.
+
+**2. Explore modern backend development**
+
+The project is also being used to explore and demonstrate concepts such as:
+
+* REST API development
+* Backend architecture
+* Domain modeling
+* Database design
+* Authentication and authorization
+* External API integrations
+* Artificial intelligence integration
+* Natural-language processing
+* Business rules
+* Software architecture
+* API documentation
+
+---
+
+## License
+
+This project is licensed under the MIT License.
